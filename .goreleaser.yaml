@@ -1,0 +1,129 @@
+project_name: capsule-addon-fluxcd
+
+before:
+  hooks:
+    - go mod tidy
+
+builds:
+  - env:
+      - CGO_ENABLED=0
+      - GO111MODULE=on
+    goos:
+      - linux
+    goarch:
+      - amd64
+      - arm64
+    ldflags: |
+      -s
+      -w
+      -X main.buildCommit={{ .Commit }}
+      -X main.buildDate={{ .CommitDate }}
+      -X main.buildVersion={{ .Version }}
+    mod_timestamp: '{{ .CommitTimestamp }}'
+
+# Publish sources.
+source:
+  enabled: true
+
+# Publish the checksums file of the release.
+checksum:
+  name_template: '{{ .ProjectName }}_{{ .Version }}_checksums.txt'
+
+# Sign the checksums file.
+# All files (including the sboms) are included in the checksum,
+# so we don't need to sign each one if we don't want to.
+# https://goreleaser.com/customization/sign
+signs:
+  - cmd: cosign
+    certificate: '${artifact}.pem'
+    args:
+      - sign-blob
+      - '--output-certificate=${certificate}'
+      - '--output-signature=${signature}'
+      - '${artifact}'
+      - '--yes' # needed on cosign 2.0.0+
+    artifacts: all
+    output: true
+
+# Use ko to build and publish container image.
+# https://goreleaser.com/customization/ko/?h=kos
+kos:
+  - base_image: cgr.dev/chainguard/static
+    repository: ghcr.io/maxgio92/capsule-addon-fluxcd
+    bare: true
+    tags:
+      - '{{ .Version }}'
+      - '{{ .Major }}.{{ .Minor }}'
+      - latest
+    platforms:
+      - linux/amd64
+      - linux/arm64
+    sbom: spdx
+
+# Sign the container image.
+# https://goreleaser.com/customization/docker_sig
+docker_signs:
+  - cmd: cosign
+    artifacts: all
+    output: true
+    args:
+      - 'sign'
+      - '${artifact}'
+      - '--yes'
+
+# Create SBOMs of all archives and the source tarball using syft.
+# https://goreleaser.com/customization/sbom
+sboms:
+  - id: archive
+    artifacts: archive
+  - id: source
+    artifacts: source
+
+# Generate a GitHub release with a customized description.
+release:
+  footer: |
+    ## Thanks!
+    
+    Those were the changes on {{ .Tag }}!
+    
+    **Full Changelog**: https://github.com/maxgio92/{{ .ProjectName }}/compare/{{ .PreviousTag }}...{{ .Tag }}
+    
+    **Container images**
+    - `ghcr.io/maxgio92/{{ .ProjectName }}:{{ .Tag }}`
+    - `ghcr.io/maxgio92/{{ .ProjectName }}:latest`
+
+# Generate a GitHub release with a customized changelog.
+changelog:
+  sort: asc
+  use: github
+  filters:
+    exclude:
+    - '^test:'
+    - '^chore'
+    - '^rebase:'
+    - 'merge conflict'
+    - Merge pull request
+    - Merge remote-tracking branch
+    - Merge branch
+  groups:
+    # https://github.com/conventional-changelog/commitlint/tree/master/%40commitlint/config-conventional
+    - title: '🛠 Dependency updates'
+      regexp: '^.*?(feat|fix)\(deps\)!?:.+$'
+      order: 300
+    - title: '✨ New Features'
+      regexp: '^.*?feat(\([[:word:]]+\))??!?:.+$'
+      order: 100
+    - title: '🐛 Bug fixes'
+      regexp: '^.*?fix(\([[:word:]]+\))??!?:.+$'
+      order: 200
+    - title: '📖 Documentation updates'
+      regexp: ^.*?docs(\([[:word:]]+\))??!?:.+$
+      order: 400
+    - title: '🛡️ Security updates'
+      regexp: ^.*?(sec)(\([[:word:]]+\))??!?:.+$
+      order: 500
+    - title: '🚀 Build process updates'
+      regexp: ^.*?(build|ci)(\([[:word:]]+\))??!?:.+$
+      order: 600
+    - title: '📦 Other work'
+      order: 9999

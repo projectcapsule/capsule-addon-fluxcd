@@ -1,0 +1,91 @@
+{{- if .Values.rbac.create -}}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: {{ include "capsule-addon-fluxcd.clusterRoleName" . }}
+  labels:
+    {{- include "capsule-addon-fluxcd.labels" . | nindent 4 }}
+  {{- with .Values.rbac.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+roleRef:
+  kind: ClusterRole
+  name: {{ include "capsule-addon-fluxcd.clusterRoleName" . }}
+subjects:
+  - kind: ServiceAccount
+    name: {{ include "capsule-addon-fluxcd.serviceAccountName" . }}
+    namespace: {{ .Release.Namespace }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: {{ include "capsule-addon-fluxcd.clusterRoleName" . }}
+  labels:
+    {{- include "capsule-addon-fluxcd.labels" . | nindent 4 }}
+  {{- with .Values.rbac.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+rules:
+- apiGroups:
+  - ""
+  resources:
+    - serviceaccounts
+  verbs:
+    - get
+    - list
+    - watch
+- apiGroups:
+    - ""
+  resources:
+    - secrets
+  verbs:
+    - create
+    - patch
+    - update
+    - get
+    - list
+    - watch
+- apiGroups:
+    - rbac.authorization.k8s.io
+  resources:
+    - clusterroles
+  verbs:
+    - create
+    - update
+    - patch
+    - list
+    - bind
+    - escalate
+- apiGroups:
+    - rbac.authorization.k8s.io
+  resources:
+    - clusterrolebindings
+    - rolebindings
+  verbs:
+    - create
+    - update
+    - patch
+    - list
+- apiGroups:
+    - capsule.clastix.io
+  resources:
+    - globaltenantresources
+  verbs:
+    - create
+    - patch
+    - update
+    - get
+    - list
+    - watch
+- apiGroups:
+    - capsule.clastix.io
+  resources:
+    - tenants
+  verbs:
+    - get
+    - list
+    - watch
+{{- end }}

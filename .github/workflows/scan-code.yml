@@ -1,0 +1,24 @@
+name: Scan code
+permissions: {}
+on:
+  push:
+    branches: [ "*" ]
+  pull_request:
+    branches: [ "*" ]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  tests:
+    runs-on: ubuntu-20.04
+    env:
+      GO111MODULE: on
+    steps:
+      - name: Checkout Source
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+      - name: Run Gosec Security Scanner
+        uses: securego/gosec@55d79496019a560e16e73e1948dee20a1fad631a # v2.18.2
+        with:
+          args: ./...

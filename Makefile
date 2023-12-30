@@ -11,7 +11,11 @@ lint: golangci-lint
 
 .PHONY: e2e
 e2e: ginkgo
-	@$(GINKGO) test -v -tags e2e ./e2e
+	@$(GINKGO) -v -tags e2e ./e2e
+
+.PHONY: e2e/charts
+e2e/charts: ginkgo
+	$(GINKGO) -v -tags e2e ./e2e/charts
 
 .PHONY: golangci-lint
 golangci-lint:

@@ -121,7 +121,7 @@ var _ = BeforeSuite(func() {
 		_, err := utils.HelmInstall(
 			"capsule-addon-fluxcd",
 			NamespaceCapsule,
-			"../charts/capsule-addon-fluxcd",
+			"../../charts/capsule-addon-fluxcd",
 			"",
 			nil,
 			kubeConfig,

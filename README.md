@@ -5,8 +5,6 @@
 
 # Capsule addon for Flux CD
 
-> This project is in **development phase**.
-
 This addon enables smooth integration of multi-tenancy in Kubernetes with [Capsule](https://capsule.clastix.io/), the GitOps-way with [Flux CD](https://fluxcd.io/).
 
 In particular enables `Tenant`s to manage their resources, including creating `Namespace`s, respecting the Flux [multi-tenancy lockdown](https://fluxcd.io/flux/installation/configuration/multitenancy/).

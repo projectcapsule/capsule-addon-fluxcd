@@ -13,6 +13,12 @@ Tenant resources, represented as `Kustomization` / `HelmRelease` / etc. can be r
 
 This way tenants can be provided Namespace-as-a-Service in a GitOps fashion.
 
+## Install
+
+```shell
+helm install -n capsule-system capsule-addon-fluxcd oci://ghcr.io/maxgio92/charts/capsule-addon-fluxcd
+```
+
 ## How it works
 
 With the addon, you as platform admin, for the *oil* `Tenant` just need a `ServiceAccount` with the `capsule.addon.fluxcd/enabled=true` annotation:

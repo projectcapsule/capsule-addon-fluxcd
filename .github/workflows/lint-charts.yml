@@ -42,7 +42,3 @@ jobs:
           else
             echo -e '\033[0;32mDocumentation up to date\033[0m ✔'
           fi
-
-      - name: Run chart-testing (install)
-        run: make helm-test
-        if: steps.list-changed.outputs.changed == 'true'

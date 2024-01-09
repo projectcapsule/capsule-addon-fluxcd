@@ -57,6 +57,7 @@ rules:
     - update
     - patch
     - list
+    - watch
     - bind
     - escalate
 - apiGroups:
@@ -69,6 +70,7 @@ rules:
     - update
     - patch
     - list
+    - watch
 - apiGroups:
     - capsule.clastix.io
   resources:

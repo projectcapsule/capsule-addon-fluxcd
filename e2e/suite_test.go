@@ -47,8 +47,8 @@ const (
 	EnvChartVersionCapsule      = "CAPSULE_HELM_VERSION"
 	EnvChartVersionCapsuleProxy = "CAPSULE_PROXY_HELM_VERSION"
 
-	TimeoutKindSeconds        = 120
-	TimeoutHelmInstallSeconds = 120
+	TimeoutKindSeconds        = 600
+	TimeoutHelmInstallSeconds = 600
 
 	KubeConfigPath = "/tmp/kubeconfig"
 

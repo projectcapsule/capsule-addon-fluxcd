@@ -93,7 +93,7 @@ var _ = Describe("Creating a new ServiceAccount", func() {
 			})
 		})
 		Context("set as owner of the Tenant", func() {
-			BeforeEach(func() {
+			BeforeAll(func() {
 				Expect(adminClient.Create(context.TODO(), &capsulev1beta2.Tenant{
 					ObjectMeta: metav1.ObjectMeta{
 						Name: TenantName,
@@ -109,7 +109,7 @@ var _ = Describe("Creating a new ServiceAccount", func() {
 					},
 				})).Should(Succeed())
 			})
-			AfterEach(func() {
+			AfterAll(func() {
 				Expect(adminClient.Delete(context.TODO(), &capsulev1beta2.Tenant{
 					ObjectMeta: metav1.ObjectMeta{
 						Name: TenantName,
@@ -256,6 +256,18 @@ var _ = Describe("Creating a new ServiceAccount", func() {
 						g.Expect(gtr.Spec.TenantSelector.MatchLabels).To(BeNil())
 						g.Expect(gtr.Spec.TenantSelector.MatchExpressions).To(BeNil())
 						g.Expect(gtr.Spec.Resources).To(BeNil())
+					}, 20*time.Second, 1*time.Second).Should(Succeed())
+				})
+
+				It("should set the correct owner reference to the Tenant system Namespace", func() {
+					Eventually(func(g Gomega) {
+						ns := new(corev1.Namespace)
+						Expect(adminClient.Get(context.TODO(), types.NamespacedName{
+							Name: sa.Namespace,
+						}, ns)).Should(Succeed())
+						Expect(len(ns.OwnerReferences)).To(Equal(1))
+						Expect(ns.OwnerReferences[0].Kind).To(Equal("Tenant"))
+						Expect(ns.OwnerReferences[0].Name).To(Equal(TenantName))
 					}, 20*time.Second, 1*time.Second).Should(Succeed())
 				})
 			})

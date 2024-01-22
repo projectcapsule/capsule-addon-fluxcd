@@ -17,6 +17,7 @@ linters-settings:
           - sigs.k8s.io/controller-runtime
   funlen:
     lines: 110
+    statements: 50
   gci:
     sections:
       - standard # Captures all standard packages if they do not match another section.

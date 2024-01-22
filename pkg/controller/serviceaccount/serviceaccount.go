@@ -13,6 +13,7 @@ import (
 	corev1 "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/tools/clientcmd"
 	clientcmdapi "k8s.io/client-go/tools/clientcmd/api"
 	clientcmdlatest "k8s.io/client-go/tools/clientcmd/api/latest"
@@ -142,20 +143,37 @@ func (r *ServiceAccountReconciler) Reconcile(ctx context.Context, request ctrl.R
 		return reconcile.Result{}, errors.Wrap(err, "error ensuring the kubeConfig secret")
 	}
 
+	// Get the Tenant owned by the ServiceAccount.
+	ownerName := fmt.Sprintf("system:serviceaccount:%s:%s", sa.GetNamespace(), sa.GetName())
+
+	tenantList, err := r.listTenantsOwned(ctx, string(capsulev1beta2.ServiceAccountOwner), ownerName)
+	if err != nil {
+		return reconcile.Result{}, errors.Wrap(err, "error listing Tenants for owner")
+	}
+
+	if tenantList.Items == nil {
+		return reconcile.Result{}, errors.New("Tenant list for owner is empty")
+	}
+
+	// Get the ServiceAccount's Namespace.
+	ns := new(corev1.Namespace)
+	if err = r.Client.Get(ctx, types.NamespacedName{Namespace: "", Name: sa.Namespace}, ns); err != nil {
+		if apierrors.IsNotFound(err) {
+			r.Log.Info("ServiceAccount Namespace is missing. Requeueing.")
+
+			return reconcile.Result{Requeue: true}, nil
+		}
+
+		r.Log.Error(err, "Error reading the object")
+
+		return reconcile.Result{}, err
+	}
+	// And set the first Tenant owned by the SA as Namespace owner.
+	if err = r.setNamespaceOwnerRef(ctx, ns, tenantList.Items[0].DeepCopy()); err != nil {
+		return reconcile.Result{}, errors.Wrap(err, "error setting the owner reference on the namespace")
+	}
 	// If the option for distributing the kubeConfig to Tenant globally.
 	if sa.GetAnnotations()[ServiceAccountGlobalAnnotationKey] == ServiceAccountGlobalAnnotationValue {
-		// Get the Tenant owned by the ServiceAccount.
-		ownerName := fmt.Sprintf("system:serviceaccount:%s:%s", sa.GetNamespace(), sa.GetName())
-
-		tenantList, err := r.listTenantsOwned(ctx, string(capsulev1beta2.ServiceAccountOwner), ownerName)
-		if err != nil {
-			return reconcile.Result{}, errors.Wrap(err, "error listing Tenants for owner")
-		}
-
-		if tenantList.Items == nil {
-			return reconcile.Result{}, errors.New("Tenant list for owner is empty")
-		}
-
 		for _, tenant := range tenantList.Items {
 			// Ensure the GlobalTenantResource to distribute the kubeConfig Secret.
 			name := fmt.Sprintf("%s-%s%s", tenant.Name, sa.Name, GlobalTenantResourceSuffix)

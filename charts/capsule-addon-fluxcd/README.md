@@ -11,7 +11,7 @@ A Helm chart for Kubernetes
 | affinity | object | `{}` |  |
 | fullnameOverride | string | `""` |  |
 | image.pullPolicy | string | `"IfNotPresent"` |  |
-| image.repository | string | `"ghcr.io/maxgio92/capsule-addon-fluxcd"` |  |
+| image.repository | string | `"ghcr.io/projectcapsule/capsule-addon-fluxcd"` |  |
 | image.tag | string | `""` |  |
 | imagePullSecrets | list | `[]` |  |
 | livenessProbe | object | `{"httpGet":{"path":"/healthz","port":10080}}` | Configure the liveness probe using Deployment probe spec |

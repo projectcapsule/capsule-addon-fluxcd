@@ -23,8 +23,8 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client/config"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
-	cmd "github.com/maxgio92/capsule-addon-flux/cmd/manager"
-	"github.com/maxgio92/capsule-addon-flux/e2e/utils"
+	cmd "github.com/projectcapsule/capsule-addon-flux/cmd/manager"
+	"github.com/projectcapsule/capsule-addon-flux/e2e/utils"
 )
 
 const (

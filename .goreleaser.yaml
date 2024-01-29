@@ -49,7 +49,7 @@ signs:
 # https://goreleaser.com/customization/ko/?h=kos
 kos:
   - base_image: cgr.dev/chainguard/static
-    repository: ghcr.io/maxgio92/capsule-addon-fluxcd
+    repository: ghcr.io/projectcapsule/capsule-addon-fluxcd
     bare: true
     tags:
       - '{{ .Version }}'
@@ -86,11 +86,11 @@ release:
     
     Those were the changes on {{ .Tag }}!
     
-    **Full Changelog**: https://github.com/maxgio92/{{ .ProjectName }}/compare/{{ .PreviousTag }}...{{ .Tag }}
+    **Full Changelog**: https://github.com/projectcapsule/{{ .ProjectName }}/compare/{{ .PreviousTag }}...{{ .Tag }}
     
     **Container images**
-    - `ghcr.io/maxgio92/{{ .ProjectName }}:{{ .Tag }}`
-    - `ghcr.io/maxgio92/{{ .ProjectName }}:latest`
+    - `ghcr.io/projectcapsule/{{ .ProjectName }}:{{ .Tag }}`
+    - `ghcr.io/projectcapsule/{{ .ProjectName }}:latest`
 
 # Generate a GitHub release with a customized changelog.
 changelog:

@@ -18,8 +18,8 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 	metricsserver "sigs.k8s.io/controller-runtime/pkg/metrics/server"
 
-	"github.com/maxgio92/capsule-addon-flux/pkg/controller/serviceaccount"
-	"github.com/maxgio92/capsule-addon-flux/pkg/indexer"
+	"github.com/projectcapsule/capsule-addon-flux/pkg/controller/serviceaccount"
+	"github.com/projectcapsule/capsule-addon-flux/pkg/indexer"
 )
 
 type Options struct {

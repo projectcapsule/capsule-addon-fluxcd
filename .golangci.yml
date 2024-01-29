@@ -5,7 +5,7 @@ linters-settings:
     sections:
       - standard # Captures all standard packages if they do not match another section.
       - default # Contains all imports that could not be matched to another section type.
-      - prefix(github.com/maxgio92/capsule-addon-fluxcd) # Groups all imports with the specified Prefix.
+      - prefix(github.com/projectcapsule/capsule-addon-fluxcd) # Groups all imports with the specified Prefix.
   goconst:
     min-len: 2
     min-occurrences: 3

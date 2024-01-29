@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"github.com/maxgio92/capsule-addon-flux/cmd/manager"
+	"github.com/projectcapsule/capsule-addon-flux/cmd/manager"
 	"github.com/spf13/cobra"
 )
 

@@ -1,4 +1,4 @@
-module github.com/maxgio92/capsule-addon-flux
+module github.com/projectcapsule/capsule-addon-flux
 
 go 1.21
 

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/maxgio92/capsule-addon-flux/cmd"
+	"github.com/projectcapsule/capsule-addon-flux/cmd"
 )
 
 func main() {

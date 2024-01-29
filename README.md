@@ -1,7 +1,7 @@
-[![Latest release](https://img.shields.io/github/v/release/maxgio92/capsule-addon-fluxcd?style=for-the-badge)](https://github.com/maxgio92/capsule-addon-fluxcd/releases/latest)
-[![License](https://img.shields.io/github/license/maxgio92/capsule-addon-fluxcd?style=for-the-badge)](COPYING)
-![Go version](https://img.shields.io/github/go-mod/go-version/maxgio92/capsule-addon-fluxcd?style=for-the-badge)
-![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/maxgio92/capsule-addon-fluxcd/scan-code.yml?style=for-the-badge&label=GoSec)
+[![Latest release](https://img.shields.io/github/v/release/projectcapsule/capsule-addon-fluxcd?style=for-the-badge)](https://github.com/projectcapsule/capsule-addon-fluxcd/releases/latest)
+[![License](https://img.shields.io/github/license/projectcapsule/capsule-addon-fluxcd?style=for-the-badge)](COPYING)
+![Go version](https://img.shields.io/github/go-mod/go-version/projectcapsule/capsule-addon-fluxcd?style=for-the-badge)
+![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/projectcapsule/capsule-addon-fluxcd/scan-code.yml?style=for-the-badge&label=GoSec)
 
 # Capsule addon for Flux CD
 
@@ -16,7 +16,7 @@ This way tenants can be provided Namespace-as-a-Service in a GitOps fashion.
 ## Install
 
 ```shell
-helm install -n capsule-system capsule-addon-fluxcd oci://ghcr.io/maxgio92/charts/capsule-addon-fluxcd
+helm install -n capsule-system capsule-addon-fluxcd oci://ghcr.io/projectcapsule/charts/capsule-addon-fluxcd
 ```
 
 ## How it works

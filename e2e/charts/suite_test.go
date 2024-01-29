@@ -4,7 +4,7 @@ package charts
 
 import (
 	"fmt"
-	"github.com/maxgio92/capsule-addon-flux/e2e/utils"
+	"github.com/projectcapsule/capsule-addon-flux/e2e/utils"
 	"os"
 	"testing"
 	"time"

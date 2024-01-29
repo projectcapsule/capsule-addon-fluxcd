@@ -17,7 +17,7 @@ import (
 	"k8s.io/client-go/tools/clientcmd"
 	"time"
 
-	"github.com/maxgio92/capsule-addon-flux/pkg/controller/serviceaccount"
+	"github.com/projectcapsule/capsule-addon-flux/pkg/controller/serviceaccount"
 )
 
 var _ = Describe("Creating a new ServiceAccount", func() {

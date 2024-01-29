@@ -1,7 +1,11 @@
+// Copyright 2020-2024 Project Capsule Authors.
+// SPDX-License-Identifier: Apache-2.0
+
 package serviceaccount
 
 import (
 	"context"
+
 	capsulev1beta2 "github.com/projectcapsule/capsule/api/v1beta2"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"

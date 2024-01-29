@@ -1,10 +1,13 @@
+// Copyright 2020-2024 Project Capsule Authors.
+// SPDX-License-Identifier: Apache-2.0
+
 package serviceaccount
 
 import (
 	"context"
 	"fmt"
-	"github.com/pkg/errors"
 
+	"github.com/pkg/errors"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
@@ -34,6 +37,7 @@ func (r *ServiceAccountReconciler) ensureSATokenSecret(ctx context.Context, name
 
 			return nil
 		}
+
 		return err
 	}
 
@@ -44,7 +48,6 @@ func (r *ServiceAccountReconciler) ensureSATokenSecret(ctx context.Context, name
 // are specified as arguments.
 func (r *ServiceAccountReconciler) getSATokenSecret(ctx context.Context, saName, saNamespace string) (*corev1.Secret, error) {
 	saTokenList := new(corev1.SecretList)
-	// TODO: filter by Service Account-type and Namespace. Need index by Secret type.
 	if err := r.Client.List(ctx, saTokenList); err != nil {
 		return nil, ErrServiceAccountTokenNotFound
 	}
@@ -54,15 +57,16 @@ func (r *ServiceAccountReconciler) getSATokenSecret(ctx context.Context, saName,
 	}
 
 	var tokenSecret *corev1.Secret
+
 	for _, v := range saTokenList.Items {
 		v := v
-		switch v.Type {
-		case corev1.SecretTypeServiceAccountToken:
+		if v.Type == corev1.SecretTypeServiceAccountToken {
 			if v.Namespace == saNamespace && v.Annotations[corev1.ServiceAccountNameKey] == saName {
 				return &v, nil
 			}
 		}
 	}
+
 	if tokenSecret == nil {
 		return nil, ErrServiceAccountTokenNotFound
 	}

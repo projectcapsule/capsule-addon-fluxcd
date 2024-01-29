@@ -1,17 +1,33 @@
 linters-settings:
   cyclop:
     max-complexity: 27
+  depguard:
+    rules:
+      main:
+        list-mode: lax
+        allow:
+          - $gostd
+          - k8s.io/api
+          - k8s.io/apimachinery
+          - k8s.io/client-go
+          - github.com/projectcapsule
+          - github.com/go-logr/logr
+          - github.com/pkg/errors
+          - github.com/spf13/cobra
+          - sigs.k8s.io/controller-runtime
+  funlen:
+    lines: 110
   gci:
     sections:
       - standard # Captures all standard packages if they do not match another section.
       - default # Contains all imports that could not be matched to another section type.
-      - prefix(github.com/projectcapsule/capsule-addon-fluxcd) # Groups all imports with the specified Prefix.
+      - prefix(github.com/projectcapsule/capsule-addon-flux) # Groups all imports with the specified Prefix.
   goconst:
     min-len: 2
     min-occurrences: 3
   goheader:
     template: |-
-      Copyright 2020-2023 Project Capsule Authors.
+      Copyright 2020-2024 Project Capsule Authors.
       SPDX-License-Identifier: Apache-2.0
   govet:
     check-shadowing: true

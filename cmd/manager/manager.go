@@ -1,8 +1,13 @@
+// Copyright 2020-2024 Project Capsule Authors.
+// SPDX-License-Identifier: Apache-2.0
+
 package manager
 
 import (
 	"flag"
 	"fmt"
+	"os"
+
 	"github.com/go-logr/logr"
 	"github.com/pkg/errors"
 	capsulev1beta2 "github.com/projectcapsule/capsule/api/v1beta2"
@@ -11,7 +16,6 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 	clientgoscheme "k8s.io/client-go/kubernetes/scheme"
 	"k8s.io/client-go/rest"
-	"os"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/healthz"
@@ -56,6 +60,7 @@ func New() *cobra.Command {
 
 	// Add Zap options.
 	var fs flag.FlagSet
+
 	opts.Zo.BindFlags(&fs)
 	cmd.Flags().AddGoFlagSet(&fs)
 
@@ -67,6 +72,7 @@ func (o *Options) Run(_ *cobra.Command, _ []string) error {
 	if err := clientgoscheme.AddToScheme(scheme); err != nil {
 		return errors.Wrap(err, "unable to add client-go types to the manager's scheme")
 	}
+
 	if err := capsulev1beta2.AddToScheme(scheme); err != nil {
 		return errors.Wrap(err, "unable to add Capsule types to the manager's scheme")
 	}
@@ -87,6 +93,7 @@ func (o *Options) Run(_ *cobra.Command, _ []string) error {
 	})
 	if err != nil {
 		o.SetupLog.Error(err, "unable to create manager")
+
 		return errors.Wrap(err, "unable to create manager")
 	}
 
@@ -102,6 +109,7 @@ func (o *Options) Run(_ *cobra.Command, _ []string) error {
 
 	if err = indexer.AddToManager(ctx, o.SetupLog, mgr); err != nil {
 		o.SetupLog.Error(err, "unable to setup indexers")
+
 		return errors.Wrap(err, "unable to setup indexers")
 	}
 
@@ -112,11 +120,13 @@ func (o *Options) Run(_ *cobra.Command, _ []string) error {
 		serviceaccount.WithProxyURL(o.ProxyURL),
 	).SetupWithManager(ctx, mgr); err != nil {
 		o.SetupLog.Error(err, "unable to create manager", "controller", "ServiceAccount")
+
 		return errors.Wrap(err, "unable to setup the service account controller")
 	}
 
 	if err = mgr.Start(ctx); err != nil {
 		o.SetupLog.Error(err, "problem running manager")
+
 		return errors.Wrap(err, "unable to start the manager")
 	}
 

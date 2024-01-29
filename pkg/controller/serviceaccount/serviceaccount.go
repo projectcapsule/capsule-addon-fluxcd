@@ -1,3 +1,6 @@
+// Copyright 2020-2024 Project Capsule Authors.
+// SPDX-License-Identifier: Apache-2.0
+
 package serviceaccount
 
 import (
@@ -21,6 +24,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
 )
 
+//nolint:revive
 type ServiceAccountReconciler struct {
 	proxyURL string
 	proxyCA  string
@@ -83,6 +87,7 @@ func (r *ServiceAccountReconciler) Reconcile(ctx context.Context, request ctrl.R
 
 			return reconcile.Result{}, nil
 		}
+
 		r.Log.Error(err, "Error reading the object")
 
 		return ctrl.Result{}, err
@@ -102,16 +107,15 @@ func (r *ServiceAccountReconciler) Reconcile(ctx context.Context, request ctrl.R
 	if err != nil {
 		return reconcile.Result{}, errors.Wrap(err, "error getting token of the service account")
 	}
+
 	if tokenSecret.Data == nil {
 		r.Log.Info("ServiceAccount token data is missing. Requeueing.")
+
 		return reconcile.Result{Requeue: true}, nil
 	}
 
 	// Build the kubeConfig for the ServiceAccount Tenant Owner.
-	config, err := r.buildKubeconfig(r.proxyURL, string(tokenSecret.Data[corev1.ServiceAccountTokenKey]))
-	if err != nil {
-		return reconcile.Result{}, errors.Wrap(err, "error building the tenant owner config")
-	}
+	config := r.buildKubeconfig(r.proxyURL, string(tokenSecret.Data[corev1.ServiceAccountTokenKey]))
 
 	configRaw, err := clientcmd.Write(*config)
 	if err != nil {
@@ -142,10 +146,12 @@ func (r *ServiceAccountReconciler) Reconcile(ctx context.Context, request ctrl.R
 	if sa.GetAnnotations()[ServiceAccountGlobalAnnotationKey] == ServiceAccountGlobalAnnotationValue {
 		// Get the Tenant owned by the ServiceAccount.
 		ownerName := fmt.Sprintf("system:serviceaccount:%s:%s", sa.GetNamespace(), sa.GetName())
+
 		tenantList, err := r.listTenantsOwned(ctx, string(capsulev1beta2.ServiceAccountOwner), ownerName)
 		if err != nil {
 			return reconcile.Result{}, errors.Wrap(err, "error listing Tenants for owner")
 		}
+
 		if tenantList.Items == nil {
 			return reconcile.Result{}, errors.New("Tenant list for owner is empty")
 		}
@@ -176,6 +182,7 @@ func (r *ServiceAccountReconciler) forOption(ctx context.Context) builder.ForOpt
 			predicate.NewPredicateFuncs(func(object client.Object) bool {
 				ownerName := fmt.Sprintf("system:serviceaccount:%s:%s", object.GetNamespace(), object.GetName())
 				tntList, err := r.listTenantsOwned(ctx, string(capsulev1beta2.ServiceAccountOwner), ownerName)
+
 				return err == nil && tntList.Items != nil && len(tntList.Items) != 0
 			}),
 		),
@@ -196,7 +203,7 @@ func (r *ServiceAccountReconciler) listTenantsOwned(ctx context.Context, ownerKi
 
 // buildKubeconfig returns a client-go/clientcmd/api.Config with a token and server URL specified as arguments.
 // The server set is be the proxy configured at ServiceAccountReconciler-level.
-func (r *ServiceAccountReconciler) buildKubeconfig(server, token string) (*clientcmdapi.Config, error) {
+func (r *ServiceAccountReconciler) buildKubeconfig(server, token string) *clientcmdapi.Config {
 	// Build the client API Config.
 	config := clientcmdapi.NewConfig()
 	config.APIVersion = clientcmdlatest.Version
@@ -228,5 +235,5 @@ func (r *ServiceAccountReconciler) buildKubeconfig(server, token string) (*clien
 	config.Contexts = contexts
 	config.CurrentContext = KubeconfigContextName
 
-	return config, nil
+	return config
 }

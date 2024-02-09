@@ -32,6 +32,16 @@ rules:
 - apiGroups:
   - ""
   resources:
+  - namespaces
+  verbs:
+  - patch
+  - update
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ""
+  resources:
     - serviceaccounts
   verbs:
     - get

@@ -50,7 +50,7 @@ var _ = Describe("Creating a new ServiceAccount", func() {
 		})
 
 		Context("set as owner of the Tenant", func() {
-			BeforeEach(func() {
+			BeforeAll(func() {
 				Expect(adminClient.Create(context.TODO(), &capsulev1beta2.Tenant{
 					ObjectMeta: metav1.ObjectMeta{
 						Name: TenantName,
@@ -66,7 +66,7 @@ var _ = Describe("Creating a new ServiceAccount", func() {
 					},
 				})).Should(Succeed())
 			})
-			AfterEach(func() {
+			AfterAll(func() {
 				Expect(adminClient.Delete(context.TODO(), &capsulev1beta2.Tenant{
 					ObjectMeta: metav1.ObjectMeta{
 						Name: TenantName,

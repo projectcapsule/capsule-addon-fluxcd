@@ -1,7 +1,12 @@
 SRC_ROOT = $(shell git rev-parse --show-toplevel)
 
-GINKGO ?= $(shell command -v ginkgo)
-GOLANGCI_LINT ?= $(shell command -v golangci-lint)
+## Location to install dependencies to
+LOCALBIN ?= $(SRC_ROOT)/bin
+$(LOCALBIN):
+	mkdir -p $(LOCALBIN)
+
+GINKGO         ?= $(LOCALBIN)/ginkgo
+GOLANGCI_LINT  ?= $(LOCALBIN)/golangci-lint
 
 .PHONY: build
 build:
@@ -20,12 +25,14 @@ e2e/charts: ginkgo
 	@$(GINKGO) -v -tags e2e $(SRC_ROOT)/e2e/charts
 
 .PHONY: golangci-lint
-golangci-lint:
-	@hash ginkgo 2>/dev/null || go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.55.2
+golangci-lint: $(GOLANGCI_LINT) ## Download golangci-lint locally if necessary.
+$(GOLANGCI_LINT): $(LOCALBIN)
+	test -s $(LOCALBIN)/golangci-lint || GOBIN=$(LOCALBIN) go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.62.2
 
 .PHONY: ginkgo
-ginkgo:
-	@hash ginkgo 2>/dev/null || go install github.com/onsi/ginkgo/v2/ginkgo@v2.13.2
+ginkgo: $(GINKGO) ## Download ginkgo locally if necessary.
+$(GINKGO): $(LOCALBIN)
+	test -s $(LOCALBIN)/ginkgo || GOBIN=$(LOCALBIN) go install github.com/onsi/ginkgo/v2/ginkgo
 
 helm-lint: CT_VERSION := v3.3.1
 helm-lint: docker

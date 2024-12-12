@@ -1,6 +1,7 @@
 module github.com/projectcapsule/capsule-addon-flux
 
-go 1.21
+go 1.23
+
 require (
 	github.com/go-logr/logr v1.4.2
 	github.com/onsi/ginkgo/v2 v2.20.0

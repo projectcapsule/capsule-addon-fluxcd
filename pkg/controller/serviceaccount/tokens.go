@@ -59,7 +59,6 @@ func (r *ServiceAccountReconciler) getSATokenSecret(ctx context.Context, saName,
 	var tokenSecret *corev1.Secret
 
 	for _, v := range saTokenList.Items {
-		v := v
 		if v.Type == corev1.SecretTypeServiceAccountToken {
 			if v.Namespace == saNamespace && v.Annotations[corev1.ServiceAccountNameKey] == saName {
 				return &v, nil

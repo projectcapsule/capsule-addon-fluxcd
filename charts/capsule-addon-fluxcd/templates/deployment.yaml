@@ -30,6 +30,7 @@ spec:
           args:
           - manager
           - --proxy-ca-path=/tmp/proxy-tls/{{ .Values.proxy.tls.secretKey }}
+          - --proxy-url={{ .Values.proxy.url }}
           - --zap-log-level={{ default 4 .Values.options.logLevel }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}

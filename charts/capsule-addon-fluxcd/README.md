@@ -1,6 +1,6 @@
 # capsule-addon-fluxcd
 
-![Version: 0.1.2](https://img.shields.io/badge/Version-0.1.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.2.0](https://img.shields.io/badge/AppVersion-0.2.0-informational?style=flat-square)
+![Version: 0.2.0](https://img.shields.io/badge/Version-0.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.2.2](https://img.shields.io/badge/AppVersion-0.2.2-informational?style=flat-square)
 
 A Helm chart for Kubernetes
 
@@ -20,9 +20,10 @@ A Helm chart for Kubernetes
 | options.logLevel | string | `"4"` | Set the log verbosity of the capsule with a value from 1 to 10 |
 | podAnnotations | object | `{}` |  |
 | podSecurityContext | object | `{}` |  |
-| proxy | object | `{"tls":{"secretKey":"ca","secretName":"capsule-proxy"}}` | - Configure deployments settings related to the Capsule proxy |
+| proxy | object | `{"tls":{"secretKey":"ca","secretName":"capsule-proxy"},"url":"https://capsule-proxy.capsule-system.svc:9001"}` | - Configure deployments settings related to the Capsule proxy |
 | proxy.tls.secretKey | string | `"ca"` | - Set the Secret key that contains the CA certificate of the proxy |
 | proxy.tls.secretName | string | `"capsule-proxy"` | - Set the Secret name that contains the CA certificate of the proxy |
+| proxy.url | string | `"https://capsule-proxy.capsule-system.svc:9001"` | - Set the Capsule proxy Service URL |
 | rbac.annotations | object | `{}` |  |
 | rbac.create | bool | `true` |  |
 | readinessProbe | object | `{"httpGet":{"path":"/readyz","port":10080}}` | Configure the readiness probe using Deployment probe spec |

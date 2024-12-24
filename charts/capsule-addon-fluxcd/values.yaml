@@ -21,6 +21,8 @@ proxy:
     secretName: "capsule-proxy"
     # --- Set the Secret key that contains the CA certificate of the proxy
     secretKey: "ca"
+  # --- Set the Capsule proxy Service URL
+  url: https://capsule-proxy.capsule-system.svc:9001
 
 # -- Configure the liveness probe using Deployment probe spec
 livenessProbe:

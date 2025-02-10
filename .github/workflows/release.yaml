@@ -31,7 +31,7 @@ jobs:
 
       - uses: creekorful/goreportcard-action@1f35ced8cdac2cba28c9a2f2288a16aacfd507f9 # v1.0
 
-      - uses: sigstore/cosign-installer@1fc5bd396d372bee37d608f955b336615edf79c8 # v3.2.0
+      - uses: sigstore/cosign-installer@c56c2d3e59e4281cc41dea2217323ba5694b171e # v3.8.0
 
       - uses: anchore/sbom-action/download-syft@5ecf649a417b8ae17dc8383dc32d46c03f2312df #v0.15.1
 

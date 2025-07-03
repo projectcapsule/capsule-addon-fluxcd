@@ -16,6 +16,9 @@ build:
 lint: golangci-lint
 	$(GOLANGCI_LINT) run -c .golangci.yml
 
+.PHONY: test
+test: e2e
+
 .PHONY: e2e
 e2e: ginkgo
 	@$(GINKGO) -v -tags e2e $(SRC_ROOT)/e2e

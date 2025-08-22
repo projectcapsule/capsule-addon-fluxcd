@@ -8,9 +8,23 @@ linters:
     - godox
     - ireturn
     - lll
+    - noinlineerr
     - nonamedreturns
     - varnamelen
     - wrapcheck
+  enable:
+    - wsl_v5
+  exclusions:
+    generated: lax
+    presets:
+      - comments
+      - common-false-positives
+      - legacy
+      - std-error-handling
+    paths:
+      - third_party$
+      - builtin$
+      - examples$
   settings:
     cyclop:
       max-complexity: 27
@@ -38,17 +52,10 @@ linters:
       template: |-
         Copyright 2020-2024 Project Capsule Authors.
         SPDX-License-Identifier: Apache-2.0
-  exclusions:
-    generated: lax
-    presets:
-      - comments
-      - common-false-positives
-      - legacy
-      - std-error-handling
-    paths:
-      - third_party$
-      - builtin$
-      - examples$
+    wsl_v5:
+      allow-first-in-block: true
+      allow-whole-block: false
+      branch-max-lines: 2
 formatters:
   enable:
     - gci

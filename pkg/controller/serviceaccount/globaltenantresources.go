@@ -36,10 +36,10 @@ func (r *ServiceAccountReconciler) ensureGlobalTenantResource(ctx context.Contex
 	}
 
 	if _, err := controllerutil.CreateOrUpdate(ctx, r.Client, gtr, func() error {
-		if gtr.ObjectMeta.Labels == nil {
-			gtr.ObjectMeta.Labels = make(map[string]string, 1)
+		if gtr.Labels == nil {
+			gtr.Labels = make(map[string]string, 1)
 		}
-		gtr.ObjectMeta.Labels["app.kubernetes.io/managed-by"] = ManagerName
+		gtr.Labels["app.kubernetes.io/managed-by"] = ManagerName
 
 		return nil
 	}); err != nil {

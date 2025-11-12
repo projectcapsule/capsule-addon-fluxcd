@@ -49,7 +49,8 @@ signs:
 # https://goreleaser.com/customization/ko/?h=kos
 kos:
   - base_image: cgr.dev/chainguard/static
-    repository: ghcr.io/projectcapsule/capsule-addon-fluxcd
+    repositories:
+      - ghcr.io/projectcapsule/capsule-addon-fluxcd
     bare: true
     tags:
       - '{{ .Version }}'
